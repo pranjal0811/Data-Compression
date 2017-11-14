@@ -6,6 +6,7 @@
 package data.comp;
 
 import java.awt.FlowLayout;
+import java.io.FileNotFoundException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -15,7 +16,7 @@ import javax.swing.JFrame;
  */
 public class UI {
     JFrame f;
-    UI(){
+    UI() throws FileNotFoundException{
         f = new JFrame("file compressor");
         
         FilePicker filePicker = new FilePicker();
@@ -33,9 +34,6 @@ public class UI {
         
         f.setSize(600,500);
         f.setLayout(new FlowLayout());
-        f.setVisible(true);
-        
-        
-        
+        f.setVisible(true);    
     }
 }
