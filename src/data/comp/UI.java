@@ -19,7 +19,7 @@ public class UI {
         f = new JFrame("file compressor");
         
         FilePicker filePicker = new FilePicker();
-        filePicker.setMode(FilePicker.MODE_SAVE);
+        filePicker.setMode(FilePicker.MODE_OPEN);
         f.add(filePicker);
         f.setLocationRelativeTo(null);
         JButton b = new JButton("Compress");
