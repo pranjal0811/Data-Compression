@@ -14,7 +14,7 @@ public class DataComp {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        UI begin = new();
+        UI begin = new UI();
         
     }
     
