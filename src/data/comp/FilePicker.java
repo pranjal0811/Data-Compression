@@ -24,7 +24,7 @@ import org.apache.commons.io.FilenameUtils;
  * @author pranj
  */
 public class FilePicker extends JPanel{
-    
+    public String str = "";
     public FileInputStream fin; 
     private final JLabel jLabel;
     private final JTextField jTextField;
@@ -75,8 +75,8 @@ public class FilePicker extends JPanel{
     }
     
     public void setSpace() throws IOException{
-        byte [] ary = new byte[fin.available()+200];
-        fin.read(ary,200,fin.available());
+        byte [] ary = new byte[fin.available()+25];
+        fin.read(ary,25,fin.available());
         String name = FilenameUtils.getBaseName(getSelectedFilePath());
         String ext = FilenameUtils.getExtension(getSelectedFilePath());
         byte [] Tempn = name.getBytes(StandardCharsets.UTF_8);
@@ -88,7 +88,18 @@ public class FilePicker extends JPanel{
         for(j=0;j<Tempe.length;i++,j++){
             ary[i] = Tempe[j];
         }
-        
+        for(byte b : ary)
+            str += getBits(b);
+        FileOutputStream fout = new FileOutputStream("C:\\Users\\pranj\\Desktop\\tes");
+        fout.write(str.getBytes());
+    }
+    
+    public String getBits(byte b){
+        String result = "";
+        for(int i=0; i<8; i++){
+            result += (b&(1<<i))==0? "0":"1";
+        }
+        return result;
     }
     
     public void setMode(int mode){
