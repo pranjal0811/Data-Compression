@@ -1,6 +1,7 @@
 /*
  * FilePicker class is made for the browsing the file 
  * we use two modes for it for saving and opening.
+ * There is the binary input intialization in array.
  */
 package data.comp;
 
@@ -8,7 +9,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
@@ -30,7 +30,7 @@ public class FilePicker extends JPanel{
     private final JTextField jTextField;
     private final JButton jButton;
     private final JFileChooser jFileChooser;
-    
+    public byte [] ary;
     private int mode;
     public static final int MODE_OPEN = 1;
     public static final int MODE_SAVE = 2;
@@ -75,7 +75,7 @@ public class FilePicker extends JPanel{
     }
     
     public void setSpace() throws IOException{
-        byte [] ary = new byte[fin.available()+25];
+        ary = new byte[fin.available()+25];
         fin.read(ary,25,fin.available());
         String name = FilenameUtils.getBaseName(getSelectedFilePath());
         String ext = FilenameUtils.getExtension(getSelectedFilePath());
@@ -90,8 +90,6 @@ public class FilePicker extends JPanel{
         }
         for(byte b : ary)
             str += getBits(b);
-        FileOutputStream fout = new FileOutputStream("C:\\Users\\pranj\\Desktop\\tes");
-        fout.write(str.getBytes());
     }
     
     public String getBits(byte b){
