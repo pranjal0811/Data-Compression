@@ -9,8 +9,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -75,11 +75,11 @@ public class FilePicker extends JPanel{
     }
     
     public void setSpace() throws IOException{
-        ary = new byte[fin.available()+25];
-        fin.read(ary,25,fin.available());
+        ary = new byte[fin.available()];
+        fin.read(ary);
         String name = FilenameUtils.getBaseName(getSelectedFilePath());
         String ext = FilenameUtils.getExtension(getSelectedFilePath());
-        byte [] Tempn = name.getBytes(StandardCharsets.UTF_8);
+       /* byte [] Tempn = name.getBytes(StandardCharsets.UTF_8);
         byte [] Tempe = ext.getBytes(StandardCharsets.UTF_8);
         int i=0,j=0;
         for( ;j<Tempn.length; i++,j++){
@@ -87,9 +87,11 @@ public class FilePicker extends JPanel{
         }
         for(j=0;j<Tempe.length;i++,j++){
             ary[i] = Tempe[j];
-        }
+        }*/
         for(byte b : ary)
             str += getBits(b);
+        FileOutputStream fos = new FileOutputStream("C:\\Users\\pranj\\Desktop\\new");
+        fos.write(str.getBytes());
     }
     
     public String getBits(byte b){

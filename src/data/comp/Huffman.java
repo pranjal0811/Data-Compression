@@ -5,6 +5,8 @@
  */
 package data.comp;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 
@@ -14,21 +16,21 @@ import java.util.PriorityQueue;
  */
 public class Huffman {
     
-public static int [] getCharacterFrequency(byte [ ] ary){    
+public static int [] getCharacterFrequency(String ary){    
     int [] counts = new int[256]; //there are 256 character array
     
-    for(int i=25; i<ary.length; i++){
-        counts[(int)ary[25]]++; //count the character in text
+    for(int i=0; i<ary.length(); i++){
+        counts[(int)ary.charAt(i)]++; //count the character in text
     }
     return counts;
 }
 
-public Tree getHuffmanTree(int []counts){
+public static Tree getHuffmanTree(int []counts){
     //create a Heap to hold the trees
-    PriorityQueue <Tree> heap = new PriorityQueue<Tree>();
+    PriorityQueue <Tree> heap = new PriorityQueue<>();
     for(int i=0; i<counts.length; i++){
         if(counts[i]>0){
-            heap.add(new Tree(counts[i],(byte)i)); //A leaf node tree
+            heap.add(new Tree(counts[i],(char)i)); //A leaf node tree
         }
     }
     
@@ -59,6 +61,27 @@ private static void assignCodes(Tree.Node root,String [] codes){
     }
 }
 
+public static String encode(byte[] ary){
+    String s = new String(ary);
+    String en = "";
+    int [] counts = getCharacterFrequency(s);
+    Tree tree;
+    tree = getHuffmanTree(counts);
+    String []codes = getCodes(tree.root);
+    Map <Character,String> map = new HashMap <>();
+    for(int i=0; i<codes.length; i++){
+        if(counts[i]!=0){
+            map.put((char)i , codes[i]);
+        }
+    }        
+    for(int i=0; i<s.length();i++){
+        if(map.containsKey(s.charAt(i))){
+            en += map.get(s.charAt(i));
+        }
+    }
+    return en;
+}
+        
 public static class Tree implements Comparable<Tree>{
     Node root; //root of tree
     public Tree(Tree t1, Tree t2){
@@ -67,12 +90,12 @@ public static class Tree implements Comparable<Tree>{
         root.right = t2.root;
         root.weight = t1.root.weight + t2.root.weight;
     }
-    public Tree(int weight, byte element){
+    public Tree(int weight, char element){
         root = new Node(weight,element);
     }
     @Override
     public int compareTo(Tree T){
-        if(root.weight < T.root.weight)
+        if(root.weight > T.root.weight)
             return 1;
         else if(root.weight == T.root.weight)
             return 0;
@@ -82,7 +105,7 @@ public static class Tree implements Comparable<Tree>{
 
 
     public class Node{
-        byte element;
+        char element;
         int weight;
         Node left;
         Node right;
@@ -92,7 +115,7 @@ public static class Tree implements Comparable<Tree>{
         
         }
     
-        public Node(int weight, byte element){
+        public Node(int weight, char element){
             this.weight = weight;
             this.element = element; 
         }
