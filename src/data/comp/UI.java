@@ -7,13 +7,8 @@ package data.comp;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.BitSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -56,14 +51,8 @@ public class UI {
         f.setVisible(true);    
     }
     private void buttonActionPerformed(ActionEvent evt)throws IOException{
-                FileOutputStream fout;
-                 fout = new FileOutputStream(FilenameUtils.getFullPath(filePicker.getSelectedFilePath())+"pra");
-                 String s = Huffman.encode(filePicker.ary);
-                 BitSet bitSet = new BitSet(s.length());
-                 for(int i=0; i<s.length(); i++){
-                     if(s.charAt(i)=='1')
-                         bitSet.set(i);
-                 }
-                 fout.write(bitSet.toByteArray());
+                String name = FilenameUtils.getBaseName(filePicker.getSelectedFilePath());
+                String ext = FilenameUtils.getExtension(filePicker.getSelectedFilePath());
+                Huffman.encode(filePicker,name.getBytes(),ext.getBytes(),filePicker.ary);
         }
 }

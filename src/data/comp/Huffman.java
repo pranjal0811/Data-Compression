@@ -5,9 +5,14 @@
  */
 package data.comp;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
+import org.apache.commons.io.FilenameUtils;
 
 
 /**
@@ -61,7 +66,7 @@ private static void assignCodes(Tree.Node root,String [] codes){
     }
 }
 
-public static String encode(byte[] ary){
+public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary) throws FileNotFoundException, IOException{
     String s = new String(ary);
     String en = "";
     int [] counts = getCharacterFrequency(s);
@@ -78,8 +83,14 @@ public static String encode(byte[] ary){
         if(map.containsKey(s.charAt(i))){
             en += map.get(s.charAt(i));
         }
-    }
-    return en;
+    } 
+    File_Object obj;
+    obj = new File_Object(name,ext,en,map);
+    FileOutputStream fout = new FileOutputStream(FilenameUtils.getFullPath(filePicker.getSelectedFilePath())+"out.pranjal");
+    ObjectOutputStream oos = new ObjectOutputStream(fout);
+    oos.writeObject(obj);
+    System.out.println("hurra!!");
+            
 }
         
 public static class Tree implements Comparable<Tree>{
