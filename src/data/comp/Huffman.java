@@ -88,7 +88,7 @@ private static void assignCodes(Tree.Node root,String [] codes){
         for(int i=0; i<cFrequency.size(); i++){
             if(root.element == (char)cFrequency.keySet().toArray()[i]){
                 codes[i] = root.code;
-                System.out.println("Codes Else : " + codes[i]+" " + i);
+          //      System.out.println("Codes Else : " + codes[i]+" " + i);
             }
         }
         //codes[(int)root.element]=root.code;
@@ -144,28 +144,28 @@ public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary
     System.out.println("after tree");
     String []codes = getCodes(tree.root);
     String []codes_x = null;
-    for(String k : codes)
-        System.out.print(k);
+    //for(String k : codes)
+      //  System.out.print(k);
     Map <Character,String> map = new HashMap <>();
     for(int i=0; i<codes.length; i++){
         if(counts[i]>0){
             map.put((char) cFrequency.keySet().toArray()[i] , codes[i]);
         }
     }
-    for(Map.Entry m : map.entrySet()){
-           System.out.println(m.getKey()+""+m.getValue());
-}
+  //  for(Map.Entry m : map.entrySet()){
+        //   System.out.println(m.getKey()+""+m.getValue());
+//}
     System.out.println("after map");
     codes_x = new String[s.length()];
     for(int i=0; i<s.length();i++){
         if(map.containsKey(s.charAt(i))){
             en += map.get(s.charAt(i));
             
-            System.out.println(s.charAt(i)+""+map.get(s.charAt(i)));
+           // System.out.println(s.charAt(i)+""+map.get(s.charAt(i)));
             codes_x[i] = map.get(s.charAt(i));
         }
     }
-    System.out.println("CODES_X "+ Arrays.toString(codes_x));
+    //System.out.println("CODES_X "+ Arrays.toString(codes_x));
     System.out.println("en run");
     BitSet bitset = new BitSet(en.length());
     for(int i=0; i< en.length(); i++){
@@ -208,7 +208,7 @@ public static void decode(FilePicker filePicker) throws FileNotFoundException, I
         }
     }
     FileOutputStream fout;
-    fout = new FileOutputStream("C:\\Users\\pranj\\Desktop\\testw.doc");
+    fout = new FileOutputStream("C:\\Users\\pranj\\Desktop\\tes.txt");
     fout.write(result.getBytes());
     System.out.println("decoded");
 }

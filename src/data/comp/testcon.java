@@ -4,12 +4,9 @@
  * and open the template in the editor.
  */
 package data.comp;
-import data.comp.FilePicker;
-import data.comp.Huffman;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
 import org.apache.commons.io.FilenameUtils;
 
 /**
