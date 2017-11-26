@@ -31,10 +31,6 @@ public class FilePicker extends JPanel{
     
     public FilePicker(FileInputStream fin) throws FileNotFoundException, IOException{
         this.fin = fin;
-        setSpace();
-    }
-    
-    public void setSpace() throws IOException{
         ary = new byte[fin.available()];
         fin.read(ary);  
     }

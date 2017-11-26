@@ -25,38 +25,27 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class Huffman {
 public static Map<Character, Integer> cFrequency;    
-public static int [] getCharacterFrequency(String ary){    
+public static void getCharacterFrequency(String ary){    
     cFrequency = new HashMap<>();
-    int value =0;
-    for(int i=0; i<ary.length();i++){
-        cFrequency.put(ary.charAt(i),value);
-    }
-    
     for(int i=0; i<ary.length(); i++){
         
-        if(cFrequency.containsKey(ary.charAt(i))){
+        if(!cFrequency.containsKey(ary.charAt(i))){
+            cFrequency.put(ary.charAt(i),1);
+        }
+        else{
             cFrequency.put(ary.charAt(i),cFrequency.get(ary.charAt(i))+1);
         }
     }
-    int count[] = new int[cFrequency.size()];
-    int i =0;
-    for(Map.Entry m : cFrequency.entrySet()){
-        count[i] = (int) m.getValue();
-        i++;
+    for(Map.Entry m: cFrequency.entrySet()){
+        System.out.println(m.getKey()+" "+m.getValue());
     }
-    for(i=0; i< count.length; i++)
-        System.out.println(count[i]);
-    
-    return count;
 }
 
-public static Tree getHuffmanTree(int []counts){
+public static Tree getHuffmanTree(){
     //create a Heap to hold the trees
     PriorityQueue <Tree> heap = new PriorityQueue<>();
-    for(int i=0; i<counts.length; i++){
-        if(counts[i]>0){
-            heap.add(new Tree(counts[i], (char) cFrequency.keySet().toArray()[i])); //A leaf node tree
-        }
+    for(Map.Entry m : cFrequency.entrySet()){
+            heap.add(new Tree((int)m.getValue(), (char) m.getKey())); //A leaf node tre
     }
     
     while(heap.size()>1){
@@ -69,7 +58,7 @@ public static Tree getHuffmanTree(int []counts){
 public static String[] getCodes(Tree.Node root){
     if(root==null) return null;
     String codes[] = new String[cFrequency.size()];
-    System.out.println(codes.length+" "+cFrequency.size());
+    //System.out.println(codes.length+" "+cFrequency.size());
     assignCodes(root,codes);
     return codes;
 }
@@ -92,7 +81,7 @@ private static void assignCodes(Tree.Node root,String [] codes){
             }
         }
         //codes[(int)root.element]=root.code;
-        System.out.println(root.weight);
+        //System.out.println(root.weight);
     }
 }
 public static class Tree implements Comparable<Tree>{
@@ -136,11 +125,10 @@ public static class Tree implements Comparable<Tree>{
 }
 public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary) throws FileNotFoundException, IOException{
     String s = new String(ary);
-    String en = "";
     System.out.println(s.length());
-    int [] counts = getCharacterFrequency(s);
+    getCharacterFrequency(s);
     Tree tree;
-    tree = getHuffmanTree(counts);
+    tree = getHuffmanTree();
     System.out.println("after tree");
     String []codes = getCodes(tree.root);
     String []codes_x = null;
@@ -148,9 +136,7 @@ public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary
       //  System.out.print(k);
     Map <Character,String> map = new HashMap <>();
     for(int i=0; i<codes.length; i++){
-        if(counts[i]>0){
             map.put((char) cFrequency.keySet().toArray()[i] , codes[i]);
-        }
     }
   //  for(Map.Entry m : map.entrySet()){
         //   System.out.println(m.getKey()+""+m.getValue());
@@ -158,24 +144,23 @@ public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary
     System.out.println("after map");
     codes_x = new String[s.length()];
     for(int i=0; i<s.length();i++){
-        if(map.containsKey(s.charAt(i))){
-            en += map.get(s.charAt(i));
-            
-           // System.out.println(s.charAt(i)+""+map.get(s.charAt(i)));
-            codes_x[i] = map.get(s.charAt(i));
-        }
+        // System.out.println(s.charAt(i)+""+map.get(s.charAt(i)));
+          codes_x[i] = map.get(s.charAt(i));    
     }
-    //System.out.println("CODES_X "+ Arrays.toString(codes_x));
-    System.out.println("en run");
+    StringBuffer en = new StringBuffer("");
+    for(String code1 : codes_x){
+        en.append(code1);
+    }
+   // System.out.println(en);
     BitSet bitset = new BitSet(en.length());
     for(int i=0; i< en.length(); i++){
-        if(en.charAt(i)=='1')
+        if(en.charAt(i) =='1')
             bitset.set(i);
     }
     System.out.println("bitset");
     File_Object obj;
     obj = new File_Object(name,ext,bitset,map);
-    FileOutputStream fout = new FileOutputStream(FilenameUtils.getFullPath(filePicker.getSelectedFilePath())+"out.pranjal");
+    FileOutputStream fout = new FileOutputStream(FilenameUtils.getFullPath(filePicker.getSelectedFilePath())+"out3.pranjal");
     ObjectOutputStream oos = new ObjectOutputStream(fout);
     oos.writeObject(obj);
     System.out.println("hurra!!");            
@@ -186,30 +171,39 @@ public static void decode(FilePicker filePicker) throws FileNotFoundException, I
     File_Object obj = (File_Object)ois.readObject();
     String name = new String(obj.name);
     String ext = new String(obj.ext);
-    String code = "";
+    String []code = new String[obj.bits.length()];
     for(int i=0; i<obj.bits.length();i++){
         if(obj.bits.get(i))
-            code += "1";
+            code[i] = "1";
         else
-            code += "0";
+            code[i] = "0";
     }
-    char[]arr;
-    arr = code.toCharArray();
-    String temp = "";
-    String result = "";
-    for(int i=0; i<code.length();i++){
-        temp += String.valueOf(arr[i]);
-        for(Map.Entry m : obj.map.entrySet()){
+    System.out.println("After code formed");
+    Map<String,Character> rev = new HashMap<>();
+    for(Map.Entry m : obj.map.entrySet()){
+        rev.put((String)m.getValue(),(char) m.getKey());
+    }
+    System.out.println("get reversed");
+    //System.out.println(Arrays.toString(code));
+    StringBuffer temp = new StringBuffer("");
+    StringBuffer result = new StringBuffer("");
+    for (String code1 : code) {
+        temp.append(code1);
+        /*for(Map.Entry m : obj.map.entrySet()){
             if(m.getValue().equals(temp)){
                 result += String.valueOf(m.getKey());
-                temp = "";
-                break;
+                temp="";
             }
+        }*/
+       if(rev.containsKey(String.valueOf(temp))){
+            
+            result.append(String.valueOf(rev.get(String.valueOf(temp))));
+            temp = new StringBuffer("");
         }
     }
     FileOutputStream fout;
-    fout = new FileOutputStream("C:\\Users\\pranj\\Desktop\\tes.txt");
-    fout.write(result.getBytes());
+    fout = new FileOutputStream("C:\\Users\\pranj\\Desktop\\try2.txt");
+    fout.write(result.toString().getBytes());
     System.out.println("decoded");
 }
         
