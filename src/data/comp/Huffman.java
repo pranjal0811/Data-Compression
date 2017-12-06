@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,16 +35,16 @@ public static void getCharacterFrequency(String ary){
             cFrequency.put(ary.charAt(i),cFrequency.get(ary.charAt(i))+1);
         }
     }
-    for(Map.Entry m: cFrequency.entrySet()){
+    /*for(Map.Entry m: cFrequency.entrySet()){
         System.out.println(m.getKey()+" "+m.getValue());
-    }
+    }*/
 }
 
 public static Tree getHuffmanTree(){
     //create a Heap to hold the trees
     PriorityQueue <Tree> heap = new PriorityQueue<>();
     for(Map.Entry m : cFrequency.entrySet()){
-            heap.add(new Tree((int)m.getValue(), (char) m.getKey())); //A leaf node tre
+            heap.add(new Tree((int) m.getValue(),(char) m.getKey())); //A leaf node tre
     }
     
     while(heap.size()>1){
@@ -123,13 +122,14 @@ public static class Tree implements Comparable<Tree>{
         }
     }
 }
-public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary) throws FileNotFoundException, IOException{
-    String s = new String(ary);
-    System.out.println(s.length());
+public static void encode(FilePicker filePicker,byte[]name,byte []ext) throws FileNotFoundException, IOException{
+    String s = new String(filePicker.ary);
+    //System.out.println(filePicker.ary.length);
+    
     getCharacterFrequency(s);
     Tree tree;
     tree = getHuffmanTree();
-    System.out.println("after tree");
+    //System.out.println("after tree");
     String []codes = getCodes(tree.root);
     String []codes_x = null;
     //for(String k : codes)
@@ -138,16 +138,16 @@ public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary
     for(int i=0; i<codes.length; i++){
             map.put((char) cFrequency.keySet().toArray()[i] , codes[i]);
     }
-  //  for(Map.Entry m : map.entrySet()){
-        //   System.out.println(m.getKey()+""+m.getValue());
-//}
-    System.out.println("after map");
-    codes_x = new String[s.length()];
+   /* for(Map.Entry m : map.entrySet()){
+           System.out.println(m.getKey()+""+m.getValue());
+}*/
+    //System.out.println("after map");
+    codes_x = new String[filePicker.ary.length];
     for(int i=0; i<s.length();i++){
         // System.out.println(s.charAt(i)+""+map.get(s.charAt(i)));
           codes_x[i] = map.get(s.charAt(i));    
     }
-    StringBuffer en = new StringBuffer("");
+    StringBuilder en = new StringBuilder("");
     for(String code1 : codes_x){
         en.append(code1);
     }
@@ -157,13 +157,13 @@ public static void encode(FilePicker filePicker,byte[]name,byte []ext,byte[] ary
         if(en.charAt(i) =='1')
             bitset.set(i);
     }
-    System.out.println("bitset");
+    //System.out.println(bitset.length()+""+bitset.size());
     File_Object obj;
     obj = new File_Object(name,ext,bitset,map);
-    FileOutputStream fout = new FileOutputStream(FilenameUtils.getFullPath(filePicker.getSelectedFilePath())+"out3.pranjal");
+    FileOutputStream fout = new FileOutputStream(FilenameUtils.getFullPath(filePicker.getSelectedFilePath())+"out.pranjal");
     ObjectOutputStream oos = new ObjectOutputStream(fout);
     oos.writeObject(obj);
-    System.out.println("hurra!!");            
+    //System.out.println("hurra!!");            
 }
 
 public static void decode(FilePicker filePicker) throws FileNotFoundException, IOException, ClassNotFoundException{
@@ -171,24 +171,25 @@ public static void decode(FilePicker filePicker) throws FileNotFoundException, I
     File_Object obj = (File_Object)ois.readObject();
     String name = new String(obj.name);
     String ext = new String(obj.ext);
-    String []code = new String[obj.bits.length()];
-    for(int i=0; i<obj.bits.length();i++){
+    StringBuilder code = new StringBuilder("");
+    for(int i=0; i<=obj.bits.length();i++){
         if(obj.bits.get(i))
-            code[i] = "1";
+            code.append("1");
         else
-            code[i] = "0";
+            code.append("0");
     }
-    System.out.println("After code formed");
+    //System.out.println("After code formed");
+    //System.out.println(code.length()+" "+code);
     Map<String,Character> rev = new HashMap<>();
     for(Map.Entry m : obj.map.entrySet()){
-        rev.put((String)m.getValue(),(char) m.getKey());
+        rev.put((String)m.getValue(),(char)m.getKey());
     }
-    System.out.println("get reversed");
+    //System.out.println("get reversed");
     //System.out.println(Arrays.toString(code));
-    StringBuffer temp = new StringBuffer("");
-    StringBuffer result = new StringBuffer("");
-    for (String code1 : code) {
-        temp.append(code1);
+    StringBuilder temp = new StringBuilder("");
+    StringBuilder result = new StringBuilder("");
+    for (int k =0 ;k<code.length(); k++) {
+        temp.append(code.charAt(k));
         /*for(Map.Entry m : obj.map.entrySet()){
             if(m.getValue().equals(temp)){
                 result += String.valueOf(m.getKey());
@@ -196,15 +197,14 @@ public static void decode(FilePicker filePicker) throws FileNotFoundException, I
             }
         }*/
        if(rev.containsKey(String.valueOf(temp))){
-            
             result.append(String.valueOf(rev.get(String.valueOf(temp))));
-            temp = new StringBuffer("");
+            temp = new StringBuilder("");
         }
     }
     FileOutputStream fout;
-    fout = new FileOutputStream("C:\\Users\\pranj\\Desktop\\try2.txt");
+    fout = new FileOutputStream(FilenameUtils.getFullPath(filePicker.getSelectedFilePath())+name+"."+ext);
     fout.write(result.toString().getBytes());
-    System.out.println("decoded");
+    //System.out.println("decoded");
 }
         
 

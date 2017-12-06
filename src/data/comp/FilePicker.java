@@ -24,20 +24,21 @@ import org.apache.commons.io.FilenameUtils;
  * @author pranj
  */
 public class FilePicker extends JPanel{
-    public String str = "";
+    public String str;
     public FileInputStream fin; 
     
     public byte [] ary;
     
-    public FilePicker(FileInputStream fin) throws FileNotFoundException, IOException{
-        this.fin = fin;
+    public FilePicker(String str) throws FileNotFoundException, IOException{
+        fin = new FileInputStream(str);
+        this.str = str;
         ary = new byte[fin.available()];
         fin.read(ary);  
     }
     
     
     public String getSelectedFilePath(){
-        return DataComp.s;
+        return str;
     }
     
 }

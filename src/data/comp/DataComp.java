@@ -16,10 +16,10 @@ public class DataComp {
     public static String s;
     public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
         // TODO code application logic here
-       // UI begin = new UI();
-       Scanner in = new Scanner(System.in);
-       s = in.next();
-       testcon t = new testcon(s); 
+       UI begin = new UI();
+       //Scanner in = new Scanner(System.in);
+       //s = in.next();
+       //testcon t = new testcon(s); 
     }
     
 }
